@@ -84,17 +84,17 @@ export type DiffSnapshotOptions = {
 type ExtraSnapshotOptions = {
   /**
    * Waits an arbitrary amount of time (in milliseconds) if the baseline image doesn't exist
-   * @default 5000.
+   * @default 2500
    */
   delay: number
   /**
    * Time it takes for the snapshot command to time out if the snapshot is not correct
-   * @default 15000.
+   * @default 5000
    */
   recursiveTimeout: number
   /**
    * Sets a delay between recursive snapshots
-   * @default 3000.
+   * @default 2000.
    */
   delayBetweenTries: number
 }
