@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/emerson-eps/cypress-image-snapshot/compare/1.0.0...1.0.1) (2023-06-14)
+
+
+### Reverts
+
+* Revert "update stuff" ([b2db6a8](https://github.com/emerson-eps/cypress-image-snapshot/commit/b2db6a83306e4d5fcc45f51da9d711f18f62e462))
+
 # [7.0.0](https://github.com/simonsmith/cypress-image-snapshot/compare/6.1.1...7.0.0) (2023-05-25)
 
 
