@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/emerson-eps/cypress-image-snapshot/compare/1.0.1...1.0.2) (2023-06-14)
+
+
+### Bug Fixes
+
+* empty commit ([b982b90](https://github.com/emerson-eps/cypress-image-snapshot/commit/b982b90c8d06b448507602a1618779186a92b964))
+
 ## [1.0.1](https://github.com/emerson-eps/cypress-image-snapshot/compare/1.0.0...1.0.1) (2023-06-14)
 
 
