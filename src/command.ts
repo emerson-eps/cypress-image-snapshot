@@ -1,3 +1,4 @@
+import path from 'path'
 import extend from 'just-extend'
 import {MATCH, RECORD} from './constants'
 import type {
@@ -6,6 +7,9 @@ import type {
   SnapshotOptions,
   Subject,
 } from './types'
+
+const PNG_EXT = '.png'
+const SNAP_EXT = `.snap${PNG_EXT}`
 
 const COMMAND_NAME = 'cypress-image-snapshot'
 const screenshotsFolder =
@@ -21,6 +25,9 @@ const defaultOptions: SnapshotOptions = {
   currentTestTitle: '',
   failureThreshold: 0,
   failureThresholdType: 'pixel',
+  delay: 2500,
+  recursiveTimeout: 5000,
+  delayBetweenTries: 2000,
 }
 
 /**
@@ -64,45 +71,98 @@ const matchImageSnapshot =
     })
 
     const screenshotName = getScreenshotFilename(filename)
-    elementToScreenshot.screenshot(screenshotName, options)
 
-    return cy.task<DiffSnapshotResult>(RECORD).then((snapshotResult) => {
-      const {
-        added,
-        pass,
-        updated,
-        imageDimensions,
-        diffPixelCount,
-        diffRatio,
-        diffSize,
-        diffOutputPath,
-      } = snapshotResult
+    const {specFileName, screenshotsFolder, customSnapshotsDir} = options
 
-      if (added && isRequireSnapshots) {
-        const message = `New snapshot: '${screenshotName}' was added, but 'requireSnapshots' was set to true.
-            This is likely because this test was run in a CI environment in which snapshots should already be committed.`
-        if (isFailOnSnapshotDiff) {
-          throw new Error(message)
+    const snapshotsDir = customSnapshotsDir
+      ? path.join(process.cwd(), customSnapshotsDir, specFileName)
+      : path.join(screenshotsFolder, '..', 'snapshots', specFileName)
+
+    const snapshotDotPath = path.join(
+      snapshotsDir,
+      `${screenshotName}${SNAP_EXT}`,
+    )
+
+    const fullSnapshotPath = path.join(
+      replaceSlashes(screenshotsFolder),
+      '..',
+      snapshotDotPath,
+    )
+
+    function recursiveSnapshot():
+      | Cypress.Chainable<DiffSnapshotResult>
+      | Cypress.Chainable<DiffSnapshotResult | Cypress.Chainable<any>> {
+      const currentTime = Date.now()
+      const hasTimedOut = currentTime - startTime >= options.recursiveTimeout
+
+      cy.task('readFileMaybe', fullSnapshotPath).then((doesExist) => {
+        if (doesExist) {
+          elementToScreenshot.screenshot(screenshotName, options)
         } else {
-          Cypress.log({name: COMMAND_NAME, message})
+          cy.wait(options.delay).then(() => {
+            elementToScreenshot.screenshot(screenshotName, options)
+          })
+        }
+      })
+
+      return cy.task<DiffSnapshotResult>(RECORD).then((snapshotResult) => {
+        const {
+          added,
+          pass,
+          updated,
+          imageDimensions,
+          diffPixelCount,
+          diffRatio,
+          diffSize,
+          diffOutputPath,
+        } = snapshotResult
+
+        if (pass) {
           return
         }
-      }
 
-      if (!pass && !added && !updated) {
-        const message = diffSize
-          ? `Image size (${imageDimensions.baselineWidth}x${imageDimensions.baselineHeight}) different than saved snapshot size (${imageDimensions.receivedWidth}x${imageDimensions.receivedHeight}).\nSee diff for details: ${diffOutputPath}`
-          : `Image was ${
-              diffRatio * 100
-            }% different from saved snapshot with ${diffPixelCount} different pixels.\nSee diff for details: ${diffOutputPath}`
-
-        if (isFailOnSnapshotDiff) {
-          throw new Error(message)
-        } else {
-          Cypress.log({name: COMMAND_NAME, message})
+        if (added && isRequireSnapshots) {
+          const message = `New snapshot: '${screenshotName}' was added, but 'requireSnapshots' was set to true.
+            This is likely because this test was run in a CI environment in which snapshots should already be committed.`
+          if (isFailOnSnapshotDiff) {
+            throw new Error(message)
+          } else {
+            Cypress.log({name: COMMAND_NAME, message})
+            return
+          }
         }
-      }
-    })
+
+        if (!pass && !added && !updated) {
+          const message = diffSize
+            ? `Image size (${imageDimensions.baselineWidth}x${imageDimensions.baselineHeight}) different than saved snapshot size (${imageDimensions.receivedWidth}x${imageDimensions.receivedHeight}).\nSee diff for details: ${diffOutputPath}`
+            : `Image was ${
+                diffRatio * 100
+              }% different from saved snapshot with ${diffPixelCount} different pixels.\nSee diff for details: ${diffOutputPath}`
+
+          if (isFailOnSnapshotDiff && hasTimedOut) {
+            throw new Error(message)
+          } else if (hasTimedOut) {
+            Cypress.log({name: COMMAND_NAME, message})
+          } else {
+            Cypress.log({name: COMMAND_NAME, message})
+            Cypress.log({
+              message: `Attempt ${currentAttempt.toString()} out of ${totalAttempts.toString()}`,
+            })
+            currentAttempt++
+            return cy.wait(options.delayBetweenTries).then(() => {
+              return recursiveSnapshot()
+            })
+          }
+        }
+      })
+    }
+
+    const totalAttempts = Math.floor(
+      options.recursiveTimeout / options.delayBetweenTries,
+    )
+    let currentAttempt = 1
+    const startTime = Date.now()
+    recursiveSnapshot()
   }
 
 const getNameAndOptions = (
@@ -150,4 +210,12 @@ const getScreenshotFilename = (filename: string | undefined) => {
     return filename
   }
   return Cypress.currentTest.titlePath.join(' -- ')
+}
+
+/**
+ * replaces forward slashes (/) and backslashes (\) in a given input string with the appropriate path separator based on the operating system
+ * @param input string to replace
+ */
+export const replaceSlashes = (input: string): string => {
+  return input.replace(/\\/g, path.sep).replace(/\//g, path.sep)
 }
