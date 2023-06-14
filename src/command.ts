@@ -160,6 +160,7 @@ const matchImageSnapshot =
     const totalAttempts = Math.floor(
       options.recursiveTimeout / options.delayBetweenTries,
     )
+
     let currentAttempt = 1
     const startTime = Date.now()
     recursiveSnapshot()
