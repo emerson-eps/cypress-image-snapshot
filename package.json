@@ -1,5 +1,5 @@
 {
-  "name": "@simonsmith/cypress-image-snapshot",
+  "name": "@emerson-eps/cypress-image-snapshot",
   "packageManager": "yarn@3.5.0",
   "version": "7.0.0",
   "files": [

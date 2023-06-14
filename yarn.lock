@@ -281,6 +281,46 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@emerson-eps/cypress-image-snapshot@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "@emerson-eps/cypress-image-snapshot@workspace:."
+  dependencies:
+    "@commitlint/cli": ^17.6.3
+    "@commitlint/config-conventional": ^17.6.3
+    "@semantic-release/changelog": ^6.0.3
+    "@semantic-release/commit-analyzer": ^9.0.2
+    "@semantic-release/exec": ^6.0.3
+    "@semantic-release/git": ^10.0.1
+    "@semantic-release/github": ^8.0.7
+    "@semantic-release/npm": ^10.0.3
+    "@semantic-release/release-notes-generator": ^11.0.1
+    "@types/eslint": ^8.37.0
+    "@types/eslint-config-prettier": ^6.11.0
+    "@types/jest": ^29.5.1
+    "@types/jest-image-snapshot": ^6.1.0
+    "@types/node": ^18.16.12
+    "@types/prettier": ^2.7.2
+    "@typescript-eslint/eslint-plugin": ^5.59.6
+    "@typescript-eslint/parser": ^5.59.6
+    chalk: ^4.1.2
+    cypress: ^12.12.0
+    doctoc: ^2.2.1
+    eslint: ^8.40.0
+    eslint-config-prettier: ^8.8.0
+    eslint-plugin-prettier: ^4.2.1
+    http-server: ^14.1.1
+    jest-image-snapshot: ^6.1.0
+    just-extend: ^6.2.0
+    npm-run-all: ^4.1.5
+    prettier: ^2.8.8
+    replace-json-property: ^1.9.0
+    semantic-release: ^21.0.2
+    typescript: ^5.0.4
+  peerDependencies:
+    cypress: ">10.0.0"
+  languageName: unknown
+  linkType: soft
+
 "@eslint-community/eslint-utils@npm:^4.2.0":
   version: 4.4.0
   resolution: "@eslint-community/eslint-utils@npm:4.4.0"
@@ -984,46 +1024,6 @@ __metadata:
   checksum: 9959bc5176906609dda6ad2a1f5226fac1e49fcb4d29f38969d2a2e3a05cba8e2479721ba78c46a507513abacb63f25a991e5e8856c300204cded455f34ba8c5
   languageName: node
   linkType: hard
-
-"@simonsmith/cypress-image-snapshot@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "@simonsmith/cypress-image-snapshot@workspace:."
-  dependencies:
-    "@commitlint/cli": ^17.6.3
-    "@commitlint/config-conventional": ^17.6.3
-    "@semantic-release/changelog": ^6.0.3
-    "@semantic-release/commit-analyzer": ^9.0.2
-    "@semantic-release/exec": ^6.0.3
-    "@semantic-release/git": ^10.0.1
-    "@semantic-release/github": ^8.0.7
-    "@semantic-release/npm": ^10.0.3
-    "@semantic-release/release-notes-generator": ^11.0.1
-    "@types/eslint": ^8.37.0
-    "@types/eslint-config-prettier": ^6.11.0
-    "@types/jest": ^29.5.1
-    "@types/jest-image-snapshot": ^6.1.0
-    "@types/node": ^18.16.12
-    "@types/prettier": ^2.7.2
-    "@typescript-eslint/eslint-plugin": ^5.59.6
-    "@typescript-eslint/parser": ^5.59.6
-    chalk: ^4.1.2
-    cypress: ^12.12.0
-    doctoc: ^2.2.1
-    eslint: ^8.40.0
-    eslint-config-prettier: ^8.8.0
-    eslint-plugin-prettier: ^4.2.1
-    http-server: ^14.1.1
-    jest-image-snapshot: ^6.1.0
-    just-extend: ^6.2.0
-    npm-run-all: ^4.1.5
-    prettier: ^2.8.8
-    replace-json-property: ^1.9.0
-    semantic-release: ^21.0.2
-    typescript: ^5.0.4
-  peerDependencies:
-    cypress: ">10.0.0"
-  languageName: unknown
-  linkType: soft
 
 "@sinclair/typebox@npm:^0.25.16":
   version: 0.25.24
