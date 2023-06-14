@@ -1,0 +1,49 @@
+name: build-and-test
+on: [push, pull_request]
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: './.github/actions/install'
+  lint:
+    needs: install
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+         fetch-depth: '0'
+      - name: yarn install
+        uses: ./.github/actions/yarn-nm-install
+      - run: yarn lint
+  cypress:
+    needs: [install, lint]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: yarn install
+        uses: ./.github/actions/yarn-nm-install
+      - name: Restore Cypress binary
+        run: yarn install
+      - name: Run tests
+        run: yarn test:run
+  release:
+    needs: [cypress, lint]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v3
+      - name: yarn install
+        uses: ./.github/actions/yarn-nm-install
+      - name: Release
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          # ci:build outputs all the files to the root so that users do not
+          # need to install from `dist`
+          yarn ci:build
+          yarn release
