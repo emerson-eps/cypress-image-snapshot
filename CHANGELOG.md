@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/emerson-eps/cypress-image-snapshot/compare/1.0.2...1.1.0) (2023-06-15)
+
+
+### Features
+
+* trigger public release ([020e428](https://github.com/emerson-eps/cypress-image-snapshot/commit/020e42819aa33388f9c54879242354f089d0820c))
+
 ## [1.0.2](https://github.com/emerson-eps/cypress-image-snapshot/compare/1.0.1...1.0.2) (2023-06-14)
 
 
