@@ -10,6 +10,12 @@
   "publishConfig": {
     "access": "public"
   },
+  "release": {
+    "branches": [
+      "master"
+    ],
+    "preset": "conventionalcommits"
+  },
   "scripts": {
     "test:open": "npm-run-all build --parallel --race cypress:open cypress:server",
     "test:run": "npm-run-all build --parallel --race cypress:run cypress:server",
