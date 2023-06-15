@@ -25,7 +25,6 @@ const defaultOptions: SnapshotOptions = {
   currentTestTitle: '',
   failureThreshold: 0,
   failureThresholdType: 'pixel',
-  delay: 2500,
   recursiveTimeout: 5000,
   delayBetweenTries: 2000,
 }
@@ -72,39 +71,13 @@ const matchImageSnapshot =
 
     const screenshotName = getScreenshotFilename(filename)
 
-    const {specFileName, screenshotsFolder, customSnapshotsDir} = options
-
-    const snapshotsDir = customSnapshotsDir
-      ? path.join(process.cwd(), customSnapshotsDir, specFileName)
-      : path.join(screenshotsFolder, '..', 'snapshots', specFileName)
-
-    const snapshotDotPath = path.join(
-      snapshotsDir,
-      `${screenshotName}${SNAP_EXT}`,
-    )
-
-    const fullSnapshotPath = path.join(
-      replaceSlashes(screenshotsFolder),
-      '..',
-      snapshotDotPath,
-    )
-
     function recursiveSnapshot():
       | Cypress.Chainable<DiffSnapshotResult>
       | Cypress.Chainable<DiffSnapshotResult | Cypress.Chainable<any>> {
       const currentTime = Date.now()
       const hasTimedOut = currentTime - startTime >= options.recursiveTimeout
 
-      cy.task('readFileMaybe', fullSnapshotPath).then((doesExist) => {
-        if (doesExist) {
-          elementToScreenshot.screenshot(screenshotName, options)
-        } else {
-          cy.wait(options.delay).then(() => {
-            elementToScreenshot.screenshot(screenshotName, options)
-          })
-        }
-      })
-
+      elementToScreenshot.screenshot(screenshotName, options)
       return cy.task<DiffSnapshotResult>(RECORD).then((snapshotResult) => {
         const {
           added,
