@@ -6,16 +6,20 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: './.github/actions/install'
+
   lint:
     needs: install
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
         with:
-         fetch-depth: '0'
+          fetch-depth: '0'
       - name: yarn install
         uses: ./.github/actions/yarn-nm-install
-      - run: yarn lint
+      - name: Run lint
+        if: ${{ github.ref == 'refs/heads/master' }}
+        run: yarn lint
+
   cypress:
     needs: [install, lint]
     runs-on: ubuntu-latest
@@ -27,6 +31,7 @@ jobs:
         run: yarn install
       - name: Run tests
         run: yarn test:run
+
   release:
     needs: [cypress, lint]
     runs-on: ubuntu-latest
