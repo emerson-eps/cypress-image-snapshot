@@ -92,10 +92,10 @@ type ExtraSnapshotOptions = {
    * Time it takes for the snapshot command to time out if the snapshot is not correct
    * @default 5000
    */
-  recursiveTimeout: number
+  timeout: number
   /**
    * Sets a delay between recursive snapshots
-   * @default 2000.
+   * @default 1000.
    */
   delayBetweenTries: number
 }
