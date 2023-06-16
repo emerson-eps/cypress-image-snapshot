@@ -25,8 +25,8 @@ const defaultOptions: SnapshotOptions = {
   currentTestTitle: '',
   failureThreshold: 0,
   failureThresholdType: 'pixel',
-  recursiveTimeout: 5000,
-  delayBetweenTries: 2000,
+  timeout: 5000,
+  delayBetweenTries: 1000,
 }
 
 /**
@@ -73,9 +73,10 @@ const matchImageSnapshot =
 
     function recursiveSnapshot():
       | Cypress.Chainable<DiffSnapshotResult>
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       | Cypress.Chainable<DiffSnapshotResult | Cypress.Chainable<any>> {
       const currentTime = Date.now()
-      const hasTimedOut = currentTime - startTime >= options.recursiveTimeout
+      const hasTimedOut = currentTime - startTime >= Math.abs(options.timeout)
 
       elementToScreenshot.screenshot(screenshotName, options)
       return cy.task<DiffSnapshotResult>(RECORD).then((snapshotResult) => {
@@ -131,7 +132,7 @@ const matchImageSnapshot =
     }
 
     const totalAttempts = Math.floor(
-      options.recursiveTimeout / options.delayBetweenTries,
+      options.timeout / options.delayBetweenTries,
     )
     let currentAttempt = 1
     const startTime = Date.now()
