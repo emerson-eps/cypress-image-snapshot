@@ -73,9 +73,11 @@ const matchImageSnapshot =
 
     function recursiveSnapshot():
       | Cypress.Chainable<DiffSnapshotResult>
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       | Cypress.Chainable<DiffSnapshotResult | Cypress.Chainable<any>> {
       const currentTime = Date.now()
-      const hasTimedOut = currentTime - startTime >= options.recursiveTimeout
+      const hasTimedOut =
+        currentTime - startTime >= Math.abs(options.recursiveTimeout)
 
       elementToScreenshot.screenshot(screenshotName, options)
       return cy.task<DiffSnapshotResult>(RECORD).then((snapshotResult) => {
