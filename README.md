@@ -2,7 +2,7 @@
 
 Cypress Image Snapshot binds [jest-image-snapshot](https://github.com/americanexpress/jest-image-snapshot)'s image diffing logic to [Cypress.io](https://cypress.io) commands.
 
-[![build-and-test](https://github.com/simonsmith/cypress-image-snapshot2/actions/workflows/build-and-test.yml/badge.svg)](https://github.com/simonsmith/cypress-image-snapshot2/actions/workflows/build-and-test.yml)
+[![build-and-test](https://github.com/emerson-eps/cypress-image-snapshot/actions/workflows/build-and-test.yml/badge.svg)](https://github.com/emerson-eps/cypress-image-snapshot/actions/workflows/build-and-test.yml)
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -33,10 +33,10 @@ Install with your chosen package manager
 
 ```bash
 # yarn
-yarn add --dev @simonsmith/cypress-image-snapshot
+yarn add --dev @emerson-eps/cypress-image-snapshot
 
 # npm
-npm install --save-dev @simonsmith/cypress-image-snapshot
+npm install --save-dev @emerson-eps/cypress-image-snapshot
 ```
 
 Next, import the plugin function and add it to the [`setupNodeEvents` function](https://docs.cypress.io/guides/references/configuration#setupNodeEvents):
@@ -45,7 +45,7 @@ Next, import the plugin function and add it to the [`setupNodeEvents` function](
 // cypress.config.ts
 
 import {defineConfig} from 'cypress'
-import {addMatchImageSnapshotPlugin} from '@simonsmith/cypress-image-snapshot/plugin'
+import {addMatchImageSnapshotPlugin} from '@emerson-eps/cypress-image-snapshot/plugin'
 
 export default defineConfig({
   e2e: {
@@ -61,20 +61,20 @@ Add the command to your relevant [support file](https://docs.cypress.io/guides/c
 ```ts
 // cypress/support/e2e.ts
 
-import {addMatchImageSnapshotCommand} from '@simonsmith/cypress-image-snapshot/command'
+import {addMatchImageSnapshotCommand} from '@emerson-eps/cypress-image-snapshot'
 
 addMatchImageSnapshotCommand()
 
-// can also add any default options to be used 
+// can also add any default options to be used
 // by all instances of `matchImageSnapshot`
 addMatchImageSnapshotCommand({
-  failureThreshold: 0.2
+  failureThreshold: 0.2,
 })
 ```
 
 ### TypeScript
 
-TypeScript is supported so  any reference to `@types/cypress-image-snapshot` can be removed from your project
+TypeScript is supported so any reference to `@types/cypress-image-snapshot` can be removed from your project
 
 Ensure that the types are included in your `tsconfig.json`
 
@@ -83,7 +83,7 @@ Ensure that the types are included in your `tsconfig.json`
   "compilerOptions": {
     // ...
   },
-  "include": ["@simonsmith/cypress-image-snapshot/types"]
+  "include": ["@emerson-eps/cypress-image-snapshot"]
 }
 ```
 
@@ -106,6 +106,7 @@ describe('Login', () => {
     cy.matchImageSnapshot({
       failureThreshold: 0.4
       blur: 10
+      timeout: 3000
     });
 
     // match element snapshot
@@ -118,8 +119,8 @@ describe('Login', () => {
 
 The options object combines jest-image-snapshot and Cypress screenshot configuration.
 
-* [jest-image-snapshot](https://github.com/americanexpress/jest-image-snapshot#%EF%B8%8F-api)
-* [Cypress screenshot](https://docs.cypress.io/api/commands/screenshot#Arguments)
+- [jest-image-snapshot](https://github.com/americanexpress/jest-image-snapshot#%EF%B8%8F-api)
+- [Cypress screenshot](https://docs.cypress.io/api/commands/screenshot#Arguments)
 
 ```ts
 cy.matchImageSnapshot({
@@ -130,6 +131,18 @@ cy.matchImageSnapshot({
   // options for Cypress.screenshot()
   capture: 'viewport',
   blackout: ['.some-element'],
+})
+```
+
+New options have been implemented to make the function recursive and to retry the snapshots:
+
+```ts
+cy.matchImageSnapshot({
+  // Time it takes for the snapshot command to time out if the snapshot is not correct
+  timeout: 5000,
+
+  //Sets a delay between recursive snapshots
+  delayBetweenTries: 2000,
 })
 ```
 
@@ -163,11 +176,11 @@ Cypress must be installed as a peer dependency
 
 ### Setup
 
-* Clone the repository and install the yarn dependencies with `yarn install`
-* Ensure that Docker is setup. This is necessary for generating/updating snapshots
-* Using [Volta](https://volta.sh/) is recommended for managing Node and Yarn versions. These are
+- Clone the repository and install the yarn dependencies with `yarn install`
+- Ensure that Docker is setup. This is necessary for generating/updating snapshots
+- Using [Volta](https://volta.sh/) is recommended for managing Node and Yarn versions. These are
   automatically picked up from the `package.json`
-* Commits should be based on [conventional-changelog](https://github.com/pvdlg/conventional-changelog-metahub#commit-types)
+- Commits should be based on [conventional-changelog](https://github.com/pvdlg/conventional-changelog-metahub#commit-types)
 
 ### Working on the plugin
 
@@ -184,14 +197,14 @@ verbose output sent to the test runner console to aid debugging.
 
 **Note** here that the yarn script above will re-build the plugin each time. This is
 necessary because the tests are run against the output in the `dist` directory
-to ensure parity between the built package on NPM. 
+to ensure parity between the built package on NPM.
 
 Ensure that the command is run each time changes need to be tested in Cypress
 
 #### run
 
-* `yarn docker:build`
-* `yarn docker:run`
+- `yarn docker:build`
+- `yarn docker:run`
 
 The commands here ensure that the tests are run inside a Docker container that
 matches the CI machine. This allows images to be generated and matched correctly
@@ -202,8 +215,8 @@ when running the tests in Github Actions.
 It is necessary to have two environment variables defined by default before
 running the tests in Docker:
 
-* `CYPRESS_updateSnapshots=false`
-* `CYPRESS_debugSnapshots=false`
+- `CYPRESS_updateSnapshots=false`
+- `CYPRESS_debugSnapshots=false`
 
 It's recommended that these are loaded into the shell with something like [direnv](https://direnv.net/)
 
@@ -213,6 +226,6 @@ Then they can be overridden as needed:
 CYPRESS_updateSnapshots=true yarn docker:run
 ```
 
-## Forked from `jaredpalmer/cypress-image-snapshot`
+## Forked from `@simonsmith/cypress-image-snapshot`
 
-This is a rewrite of the original plugin as active development has ceased. Full credit goes to [Jared Palmer](https://github.com/jaredpalmer).
+This is a rewrite of the plugin from [Simon Smith](https://github.com/simonsmith/cypress-image-snapshot).
