@@ -142,7 +142,7 @@ cy.matchImageSnapshot({
   timeout: 5000,
 
   //Sets a delay between recursive snapshots
-  delayBetweenTries: 2000,
+  delayBetweenTries: 1000,
 })
 ```
 
