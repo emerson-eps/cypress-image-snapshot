@@ -63,18 +63,18 @@ const matchImageSnapshot =
       commandOptions,
     )
 
-    const elementToScreenshot = cy.wrap(subject)
-    cy.task(MATCH, {
-      ...options,
-      currentTestTitle: Cypress.currentTest.title,
-    })
-
-    const screenshotName = getScreenshotFilename(filename)
-
     function recursiveSnapshot():
       | Cypress.Chainable<DiffSnapshotResult>
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       | Cypress.Chainable<DiffSnapshotResult | Cypress.Chainable<any>> {
+      const elementToScreenshot = cy.wrap(subject)
+      cy.task(MATCH, {
+        ...options,
+        currentTestTitle: Cypress.currentTest.title,
+      })
+
+      const screenshotName = getScreenshotFilename(filename)
+
       const currentTime = Date.now()
       const hasTimedOut = currentTime - startTime >= Math.abs(options.timeout)
 
