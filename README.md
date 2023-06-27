@@ -150,10 +150,6 @@ cy.matchImageSnapshot({
 
 Run Cypress with `--env updateSnapshots=true` in order to update the base image files for all of your tests.
 
-### Preventing failures
-
-Run Cypress with `--env failOnSnapshotDiff=false` in order to prevent test failures when an image diff does not pass.
-
 ### Requiring snapshots to be present
 
 Run Cypress with `--env requireSnapshots=true` in order to fail if snapshots are missing. This is useful in continuous integration where snapshots should be present in advance.
