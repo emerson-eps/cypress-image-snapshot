@@ -52,11 +52,6 @@ const matchImageSnapshot =
     nameOrCommandOptions: CypressImageSnapshotOptions | string,
     commandOptions?: CypressImageSnapshotOptions,
   ) => {
-    // access the env here so that it can be overridden in tests
-    const isFailOnSnapshotDiff: boolean =
-      typeof Cypress.env('failOnSnapshotDiff') === 'undefined' || false
-    const isRequireSnapshots: boolean = Cypress.env('requireSnapshots') || false
-
     const {filename, options} = getNameAndOptions(
       nameOrCommandOptions,
       defaultOptionsOverrides,
@@ -95,15 +90,14 @@ const matchImageSnapshot =
           return
         }
 
-        if (added && isRequireSnapshots) {
-          const message = `New snapshot: '${screenshotName}' was added, but 'requireSnapshots' was set to true.
-            This is likely because this test was run in a CI environment in which snapshots should already be committed.`
-          if (isFailOnSnapshotDiff) {
-            throw new Error(message)
-          } else {
-            Cypress.log({name: COMMAND_NAME, message})
-            return
-          }
+        if (added) {
+          const message = `New snapshot: '${screenshotName}' was added`
+          Cypress.log({name: COMMAND_NAME, message})
+          //An after each hook should check if @matchSnapshot is defined, if yes it should fail the tests
+          cy.wrap(`A new reference Image was created for ${screenshotName}`, {
+            log: false,
+          }).as('matchSnapshot')
+          return
         }
 
         if (!pass && !added && !updated) {
@@ -112,11 +106,15 @@ const matchImageSnapshot =
             : `Image was ${
                 diffRatio * 100
               }% different from saved snapshot with ${diffPixelCount} different pixels.\nSee diff for details: ${diffOutputPath}`
-
-          if (isFailOnSnapshotDiff && hasTimedOut) {
-            throw new Error(message)
-          } else if (hasTimedOut) {
+          if (hasTimedOut) {
             Cypress.log({name: COMMAND_NAME, message})
+            //An after each hook should check if @matchSnapshot is defined, if yes it should fail the tests
+            cy.wrap(
+              `Screenshot comparison failed for ${screenshotName}\n${message}`,
+              {
+                log: false,
+              },
+            ).as('matchSnapshot')
           } else {
             Cypress.log({name: COMMAND_NAME, message})
             Cypress.log({
