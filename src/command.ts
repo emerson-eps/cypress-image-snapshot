@@ -57,7 +57,7 @@ const matchImageSnapshot =
       defaultOptionsOverrides,
       commandOptions,
     )
-
+    const errorMessages: {[key: string]: string} = {}
     function recursiveSnapshot():
       | Cypress.Chainable<DiffSnapshotResult>
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -93,10 +93,10 @@ const matchImageSnapshot =
         if (added) {
           const message = `New snapshot: '${screenshotName}' was added`
           Cypress.log({name: COMMAND_NAME, message})
-          //An after each hook should check if @matchSnapshot is defined, if yes it should fail the tests
+          //An after each hook should check if @matchImageSnapshot is defined, if yes it should fail the tests
           cy.wrap(`A new reference Image was created for ${screenshotName}`, {
             log: false,
-          }).as('matchSnapshot')
+          }).as('matchImageSnapshot')
           return
         }
 
@@ -108,13 +108,8 @@ const matchImageSnapshot =
               }% different from saved snapshot with ${diffPixelCount} different pixels.\nSee diff for details: ${diffOutputPath}`
           if (hasTimedOut) {
             Cypress.log({name: COMMAND_NAME, message})
-            //An after each hook should check if @matchSnapshot is defined, if yes it should fail the tests
-            cy.wrap(
-              `Screenshot comparison failed for ${screenshotName}\n${message}`,
-              {
-                log: false,
-              },
-            ).as('matchSnapshot')
+            //An after each hook should check if @matchImageSnapshot is defined, if yes it should fail the tests
+            errorMessages[screenshotName] = message
           } else {
             Cypress.log({name: COMMAND_NAME, message})
             Cypress.log({
@@ -135,6 +130,7 @@ const matchImageSnapshot =
     let currentAttempt = 1
     const startTime = Date.now()
     recursiveSnapshot()
+    cy.wrap(errorMessages).as('matchImageSnapshot')
   }
 
 const getNameAndOptions = (
