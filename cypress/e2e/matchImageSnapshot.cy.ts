@@ -24,3 +24,8 @@ it('matches with just options', () => {
     blackout: ['.card-v14'],
   })
 })
+
+it('verify errors are stored', () => {
+  cy.get('body').matchImageSnapshot('error1')
+  cy.get('body').matchImageSnapshot('error2')
+})
