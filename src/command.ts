@@ -101,9 +101,9 @@ const matchImageSnapshot =
           const message = `New snapshot: '${screenshotName}' was added`
           Cypress.log({name: COMMAND_NAME, message})
           //An after each hook should check if @matchImageSnapshot is defined, if yes it should fail the tests
-          cy.wrap(`A new reference Image was created for ${screenshotName}`, {
-            log: false,
-          }).as('matchImageSnapshot')
+          errorMessages[
+            screenshotName
+          ] = `A new reference Image was created for ${screenshotName}`
           return
         }
 
