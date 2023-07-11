@@ -45,6 +45,8 @@ export const addMatchImageSnapshotCommand = (
   )
 }
 
+let currentTest: string
+let errorMessages: {[key: string]: string} = {}
 const matchImageSnapshot =
   (defaultOptionsOverrides: CypressImageSnapshotOptions) =>
   (
@@ -57,7 +59,12 @@ const matchImageSnapshot =
       defaultOptionsOverrides,
       commandOptions,
     )
-    const errorMessages: {[key: string]: string} = {}
+    if (!currentTest) {
+      currentTest = Cypress.currentTest.title
+    } else if (currentTest !== Cypress.currentTest.title) {
+      currentTest = Cypress.currentTest.title
+      errorMessages = {}
+    }
     function recursiveSnapshot():
       | Cypress.Chainable<DiffSnapshotResult>
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -113,7 +120,7 @@ const matchImageSnapshot =
           } else {
             Cypress.log({name: COMMAND_NAME, message})
             Cypress.log({
-              message: `Attempt ${currentAttempt.toString()} out of ${totalAttempts.toString()}`,
+              message: `Attempt ${currentAttempt.toString()}`,
             })
             currentAttempt++
             return cy.wait(options.delayBetweenTries).then(() => {
@@ -124,9 +131,6 @@ const matchImageSnapshot =
       })
     }
 
-    const totalAttempts = Math.floor(
-      options.timeout / options.delayBetweenTries,
-    )
     let currentAttempt = 1
     const startTime = Date.now()
     recursiveSnapshot()
