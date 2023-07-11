@@ -296,7 +296,7 @@ __metadata:
     "@semantic-release/release-notes-generator": ^11.0.3
     "@types/eslint": ^8.37.0
     "@types/eslint-config-prettier": ^6.11.0
-    "@types/jest": ^29.5.1
+    "@types/jest": ^29.5.3
     "@types/jest-image-snapshot": ^6.1.0
     "@types/node": ^18.16.12
     "@types/prettier": ^2.7.3
@@ -1188,13 +1188,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jest@npm:*, @types/jest@npm:^29.5.1":
+"@types/jest@npm:*":
   version: 29.5.1
   resolution: "@types/jest@npm:29.5.1"
   dependencies:
     expect: ^29.0.0
     pretty-format: ^29.0.0
   checksum: 0a22491dec86333c0e92b897be2c809c922a7b2b0aa5604ac369810d6b2360908b4a3f2c6892e8a237a54fa1f10ecefe0e823ec5fcb7915195af4dfe88d2197e
+  languageName: node
+  linkType: hard
+
+"@types/jest@npm:^29.5.3":
+  version: 29.5.3
+  resolution: "@types/jest@npm:29.5.3"
+  dependencies:
+    expect: ^29.0.0
+    pretty-format: ^29.0.0
+  checksum: e36bb92e0b9e5ea7d6f8832baa42f087fc1697f6cd30ec309a07ea4c268e06ec460f1f0cfd2581daf5eff5763475190ec1ad8ac6520c49ccfe4f5c0a48bfa676
   languageName: node
   linkType: hard
 
