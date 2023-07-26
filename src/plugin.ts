@@ -35,7 +35,8 @@ const setOptions = (commandOptions: SnapshotOptions) => {
 }
 
 const PNG_EXT = '.png'
-const SNAP_EXT = `.snap${PNG_EXT}`
+const SNAP_EXT = `.snap`
+const SNAP_PNG_EXT = `${SNAP_EXT}${PNG_EXT}`
 const DIFF_EXT = `.diff${PNG_EXT}`
 const DEFAULT_DIFF_DIR = '__diff_output__'
 
@@ -49,7 +50,10 @@ const runImageDiffAfterScreenshot = async (
   screenshotConfig: Cypress.ScreenshotDetails,
 ) => {
   const {path: screenshotPath} = screenshotConfig
-  if (!isSnapshotActive) {
+  //if screenshot command timeout,
+  //cypress will throw an error and isSnapshotActive will never be set to false
+  //so as additional contion we can check that screenshotConfig.name is set
+  if (!isSnapshotActive || screenshotConfig.name === undefined) {
     return {path: screenshotPath}
   }
 
@@ -72,11 +76,10 @@ const runImageDiffAfterScreenshot = async (
     ? path.join(process.cwd(), customSnapshotsDir, specFileName)
     : path.join(screenshotsFolder, '..', 'snapshots', specFileName)
 
-  const snapshotNameFullPath = path.join(
+  const snapshotDotPath = path.join(
     snapshotsDir,
-    `${snapshotName}${PNG_EXT}`,
+    `${snapshotName}${SNAP_PNG_EXT}`,
   )
-  const snapshotDotPath = path.join(snapshotsDir, `${snapshotName}${SNAP_EXT}`)
 
   const diffDir = customDiffDir
     ? path.join(process.cwd(), customDiffDir, specFileName)
@@ -93,21 +96,15 @@ const runImageDiffAfterScreenshot = async (
     diffDotPath,
     specFileName,
     snapshotName,
-    snapshotNameFullPath,
     snapshotDotPath,
   })
-
-  const isExist = await pathExists(snapshotDotPath)
-  if (isExist) {
-    await fs.copyFile(snapshotDotPath, snapshotNameFullPath)
-  }
 
   snapshotResult = diffImageToSnapshot({
     ...options,
     snapshotsDir,
     diffDir,
     receivedImageBuffer,
-    snapshotIdentifier: snapshotName,
+    snapshotIdentifier: snapshotName + SNAP_EXT,
     updateSnapshot: isUpdateSnapshots,
   })
   log(
@@ -125,7 +122,6 @@ const runImageDiffAfterScreenshot = async (
 
     await fs.copyFile(diffOutputPath, diffDotPath)
     await fs.rm(diffOutputPath)
-    await fs.rm(snapshotNameFullPath)
 
     snapshotResult.diffOutputPath = diffDotPath
 
@@ -145,9 +141,6 @@ const runImageDiffAfterScreenshot = async (
     log('snapshot updated with new version')
   }
 
-  await fs.copyFile(snapshotNameFullPath, snapshotDotPath)
-  await fs.rm(snapshotNameFullPath)
-
   snapshotResult.diffOutputPath = snapshotDotPath
 
   log('screenshot write to snapshotDotPath')
@@ -156,16 +149,8 @@ const runImageDiffAfterScreenshot = async (
   }
 }
 
-async function pathExists(path: string) {
-  try {
-    await fs.stat(path)
-    return true
-  } catch {
-    return false
-  }
-}
-
-const log = (...message: any) => { // eslint-disable-line
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const log = (...message: any) => {
   if (options.isSnapshotDebug) {
     console.log(chalk.blueBright.bold('matchImageSnapshot: '), ...message)
   }
