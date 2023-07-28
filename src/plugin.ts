@@ -111,6 +111,12 @@ const runImageDiffAfterScreenshot = async (
 
   const diffDotPath = path.join(diffDir, `${snapshotName}${DIFF_EXT}`)
 
+  //since the snpashot method is called multiple time until it passes
+  //we need to delete previous diff otherwise the git repo will wrongly be in a modified state
+  if (fs1.existsSync(diffDotPath)) {
+    await fs.rm(diffDotPath)
+  }
+
   logTestName(currentTestTitle)
   log('options', options)
   log('paths', {
