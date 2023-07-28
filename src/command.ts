@@ -22,6 +22,8 @@ export const defaultOptions: SnapshotOptions = {
   isUpdateSnapshots,
   isSnapshotDebug,
   specFileName: Cypress.spec.name,
+  specRelativeFolder: Cypress.spec.relative,
+  extraFolders: '',
   currentTestTitle: '',
   failureThreshold: 0,
   failureThresholdType: 'pixel',
