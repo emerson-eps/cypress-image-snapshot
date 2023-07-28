@@ -1,6 +1,6 @@
 import path from 'path'
 import extend from 'just-extend'
-import {MATCH, RECORD} from './constants'
+import {CHECKSNAP, MATCH, RECORD} from './constants'
 import type {
   CypressImageSnapshotOptions,
   DiffSnapshotResult,
@@ -17,7 +17,7 @@ const screenshotsFolder =
 const isUpdateSnapshots: boolean = Cypress.env('updateSnapshots') || false
 const isSnapshotDebug: boolean = Cypress.env('debugSnapshots') || false
 
-const defaultOptions: SnapshotOptions = {
+export const defaultOptions: SnapshotOptions = {
   screenshotsFolder,
   isUpdateSnapshots,
   isSnapshotDebug,
@@ -65,10 +65,7 @@ const matchImageSnapshot =
       currentTest = Cypress.currentTest.title
       errorMessages = {}
     }
-    function recursiveSnapshot():
-      | Cypress.Chainable<DiffSnapshotResult>
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      | Cypress.Chainable<DiffSnapshotResult | Cypress.Chainable<any>> {
+    function recursiveSnapshot(): void {
       const elementToScreenshot = cy.wrap(subject)
       cy.task(MATCH, {
         ...options,
@@ -79,55 +76,60 @@ const matchImageSnapshot =
 
       const currentTime = Date.now()
       const hasTimedOut = currentTime - startTime >= Math.abs(options.timeout)
-
-      elementToScreenshot.screenshot(screenshotName, options)
-      return cy.task<DiffSnapshotResult>(RECORD).then((snapshotResult) => {
-        const {
-          added,
-          pass,
-          updated,
-          imageDimensions,
-          diffPixelCount,
-          diffRatio,
-          diffSize,
-          diffOutputPath,
-        } = snapshotResult
-
-        if (pass) {
-          return
+      cy.task<boolean>(CHECKSNAP, {screenshotName, options}).then((exist) => {
+        if (!exist) {
+          //base image does not exist yes
+          //so make sure we have a valid image by waiting the maximum timeout
+          cy.wait(options.timeout)
         }
+        elementToScreenshot.screenshot(screenshotName, options)
+        cy.task<DiffSnapshotResult>(RECORD).then((snapshotResult) => {
+          const {
+            added,
+            pass,
+            updated,
+            imageDimensions,
+            diffPixelCount,
+            diffRatio,
+            diffSize,
+            diffOutputPath,
+          } = snapshotResult
 
-        if (added) {
-          const message = `New snapshot: '${screenshotName}' was added`
-          Cypress.log({name: COMMAND_NAME, message})
-          //An after each hook should check if @matchImageSnapshot is defined, if yes it should fail the tests
-          errorMessages[
-            screenshotName
-          ] = `A new reference Image was created for ${screenshotName}`
-          return
-        }
+          if (pass) {
+            return
+          }
 
-        if (!pass && !added && !updated) {
-          const message = diffSize
-            ? `Image size (${imageDimensions.baselineWidth}x${imageDimensions.baselineHeight}) different than saved snapshot size (${imageDimensions.receivedWidth}x${imageDimensions.receivedHeight}).\nSee diff for details: ${diffOutputPath}`
-            : `Image was ${
-                diffRatio * 100
-              }% different from saved snapshot with ${diffPixelCount} different pixels.\nSee diff for details: ${diffOutputPath}`
-          if (hasTimedOut) {
+          if (added) {
+            const message = `New snapshot: '${screenshotName}' was added`
             Cypress.log({name: COMMAND_NAME, message})
             //An after each hook should check if @matchImageSnapshot is defined, if yes it should fail the tests
-            errorMessages[screenshotName] = message
-          } else {
-            Cypress.log({name: COMMAND_NAME, message})
-            Cypress.log({
-              message: `Attempt ${currentAttempt.toString()}`,
-            })
-            currentAttempt++
-            return cy.wait(options.delayBetweenTries).then(() => {
-              return recursiveSnapshot()
-            })
+            errorMessages[
+              screenshotName
+            ] = `A new reference Image was created for ${screenshotName}`
+            return
           }
-        }
+
+          if (!pass && !added && !updated) {
+            const message = diffSize
+              ? `Image size (${imageDimensions.baselineWidth}x${imageDimensions.baselineHeight}) different than saved snapshot size (${imageDimensions.receivedWidth}x${imageDimensions.receivedHeight}).\nSee diff for details: ${diffOutputPath}`
+              : `Image was ${
+                  diffRatio * 100
+                }% different from saved snapshot with ${diffPixelCount} different pixels.\nSee diff for details: ${diffOutputPath}`
+            if (hasTimedOut) {
+              Cypress.log({name: COMMAND_NAME, message})
+              //An after each hook should check if @matchImageSnapshot is defined, if yes it should fail the tests
+              errorMessages[screenshotName] = message
+            } else {
+              Cypress.log({name: COMMAND_NAME, message})
+              Cypress.log({
+                message: `Attempt ${currentAttempt.toString()}`,
+              })
+              currentAttempt++
+              cy.wait(options.delayBetweenTries)
+              recursiveSnapshot()
+            }
+          }
+        })
       })
     }
 

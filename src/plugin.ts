@@ -3,7 +3,7 @@ import * as fs1 from 'fs'
 import path from 'node:path'
 import chalk from 'chalk'
 import {diffImageToSnapshot} from 'jest-image-snapshot/src/diff-snapshot'
-import {MATCH, RECORD} from './constants'
+import {MATCH, RECORD, CHECKSNAP} from './constants'
 import type {DiffSnapshotResult, SnapshotOptions} from './types'
 
 /**
@@ -17,9 +17,7 @@ export const addMatchImageSnapshotPlugin = (on: Cypress.PluginEvents) => {
   on('task', {
     [MATCH]: setOptions,
     [RECORD]: getSnapshotResult,
-    readFileMaybe(filename: string) {
-      return fs1.existsSync(filename)
-    },
+    [CHECKSNAP]: checkSnapshotExistance,
   })
 }
 
@@ -44,6 +42,32 @@ let snapshotResult = {} as DiffSnapshotResult
 const getSnapshotResult = () => {
   isSnapshotActive = false
   return snapshotResult
+}
+
+const checkSnapshotExistance = ({
+  screenshotName,
+  options,
+}: {
+  screenshotName: string
+  options: SnapshotOptions
+}) => {
+  const {
+    specFileName,
+    screenshotsFolder,
+    isUpdateSnapshots,
+    customSnapshotsDir,
+  } = options
+  const snapshotName = screenshotName.replace(/ \(attempt [0-9]+\)/, '')
+
+  const snapshotsDir = customSnapshotsDir
+    ? path.join(process.cwd(), customSnapshotsDir, specFileName)
+    : path.join(screenshotsFolder, '..', 'snapshots', specFileName)
+
+  const snapshotDotPath = path.join(
+    snapshotsDir,
+    `${snapshotName}${SNAP_PNG_EXT}`,
+  )
+  return isUpdateSnapshots || fs1.existsSync(snapshotDotPath)
 }
 
 const runImageDiffAfterScreenshot = async (
