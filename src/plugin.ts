@@ -53,6 +53,8 @@ const checkSnapshotExistence = ({
 }) => {
   const {
     specFileName,
+    specRelativeFolder,
+    extraFolders,
     screenshotsFolder,
     isUpdateSnapshots,
     customSnapshotsDir,
@@ -61,7 +63,15 @@ const checkSnapshotExistence = ({
 
   const snapshotsDir = customSnapshotsDir
     ? path.join(process.cwd(), customSnapshotsDir, specFileName)
-    : path.join(screenshotsFolder, '..', 'snapshots', specFileName)
+    : path.join(
+        screenshotsFolder,
+        '..',
+        'snapshots',
+        specRelativeFolder,
+        '..',
+        extraFolders,
+        specFileName,
+      )
 
   const snapshotDotPath = path.join(
     snapshotsDir,
@@ -89,6 +99,8 @@ const runImageDiffAfterScreenshot = async (
 
   const {
     specFileName,
+    specRelativeFolder,
+    extraFolders,
     currentTestTitle,
     screenshotsFolder,
     isUpdateSnapshots,
@@ -98,7 +110,15 @@ const runImageDiffAfterScreenshot = async (
 
   const snapshotsDir = customSnapshotsDir
     ? path.join(process.cwd(), customSnapshotsDir, specFileName)
-    : path.join(screenshotsFolder, '..', 'snapshots', specFileName)
+    : path.join(
+        screenshotsFolder,
+        '..',
+        'snapshots',
+        specRelativeFolder,
+        '..',
+        extraFolders,
+        specFileName,
+      )
 
   const snapshotDotPath = path.join(
     snapshotsDir,
