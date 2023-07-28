@@ -17,7 +17,7 @@ export const addMatchImageSnapshotPlugin = (on: Cypress.PluginEvents) => {
   on('task', {
     [MATCH]: setOptions,
     [RECORD]: getSnapshotResult,
-    [CHECKSNAP]: checkSnapshotExistance,
+    [CHECKSNAP]: checkSnapshotExistence,
   })
 }
 
@@ -44,7 +44,7 @@ const getSnapshotResult = () => {
   return snapshotResult
 }
 
-const checkSnapshotExistance = ({
+const checkSnapshotExistence = ({
   screenshotName,
   options,
 }: {
