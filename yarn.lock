@@ -298,7 +298,7 @@ __metadata:
     "@types/eslint-config-prettier": ^6.11.0
     "@types/jest": ^29.5.3
     "@types/jest-image-snapshot": ^6.1.0
-    "@types/node": ^18.16.12
+    "@types/node": ^18.16.20
     "@types/prettier": ^2.7.3
     "@typescript-eslint/eslint-plugin": ^5.59.6
     "@typescript-eslint/parser": ^5.59.6
@@ -1245,10 +1245,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^18.16.12":
-  version: 18.16.12
-  resolution: "@types/node@npm:18.16.12"
-  checksum: 90b316c097a059534870bc8e358c7996d99e3bb4395c88a91b893b925ad34e32ff1177009ec6c16a6467266414dca64ec9613e9e6bb3f91b6de0ab629d3bb3b9
+"@types/node@npm:^18.16.20":
+  version: 18.17.0
+  resolution: "@types/node@npm:18.17.0"
+  checksum: 3a43c5c5541342751b514485144818a515fac5427f663066068eaacbe8a108cbe1207aae75ec89d34c3b32414c334aad84e9083cf7fcf3ebfd970adc871314a4
   languageName: node
   linkType: hard
 
