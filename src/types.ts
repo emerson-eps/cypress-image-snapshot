@@ -23,6 +23,7 @@ export type SnapshotOptions = {
   isSnapshotDebug: boolean
   specFileName: string
   currentTestTitle: string
+  specRelativeFolder: string
 } & CypressScreenshotOptions &
   MatchImageSnapshotOptions &
   ExtraSnapshotOptions
@@ -95,7 +96,12 @@ type ExtraSnapshotOptions = {
   timeout: number
   /**
    * Sets a delay between recursive snapshots
-   * @default 1000.
+   * @default 1000
    */
   delayBetweenTries: number
+  /**
+   * Adds additional folders to the snapshot save path
+   * @default ''
+   */
+  extraFolders: string
 }
