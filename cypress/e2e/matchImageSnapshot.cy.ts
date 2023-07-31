@@ -28,4 +28,13 @@ it('matches with just options', () => {
 it('verify errors are stored', () => {
   cy.get('body').matchImageSnapshot('error1')
   cy.get('body').matchImageSnapshot('error2')
+  cy.get('@matchImageSnapshot').should((obj) => {
+    expect(Object.keys(obj).length).to.eq(2)
+  })
+})
+
+it('Support extra folders', () => {
+  cy.get('body').matchImageSnapshot('extraFolder', {
+    extraFolders: 'test-folder',
+  })
 })
