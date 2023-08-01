@@ -309,7 +309,7 @@ __metadata:
     eslint-config-prettier: ^8.8.0
     eslint-plugin-prettier: ^4.2.1
     http-server: ^14.1.1
-    jest-image-snapshot: ^6.1.0
+    jest-image-snapshot: ^6.1.1
     just-extend: ^6.2.0
     npm-run-all: ^4.1.5
     prettier: ^2.8.8
@@ -4963,22 +4963,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest-image-snapshot@npm:^6.1.0":
-  version: 6.1.0
-  resolution: "jest-image-snapshot@npm:6.1.0"
+"jest-image-snapshot@npm:^6.1.1":
+  version: 6.2.0
+  resolution: "jest-image-snapshot@npm:6.2.0"
   dependencies:
     chalk: ^4.0.0
     get-stdin: ^5.0.1
     glur: ^1.1.2
     lodash: ^4.17.4
-    mkdirp: ^0.5.1
     pixelmatch: ^5.1.0
     pngjs: ^3.4.0
     rimraf: ^2.6.2
     ssim.js: ^3.1.1
   peerDependencies:
     jest: ">=20 <=29"
-  checksum: e04eb48947ce5184aa19afdd41fd2e809542fbf4e335d6302efe15cb04e8df46df40fc86c81b0dd4ef0dd2a35879c92160a7d507c7888ef477e799cbcc4255ae
+  peerDependenciesMeta:
+    jest:
+      optional: true
+  checksum: baf97e6329e8a77ff2c116ccced3e1949294fd2a08e9223ec7947effdd5670cdbbabfbb6a03439afabde51d66a32a8573545d512c47a68d9e4b3c5f1249ac6a1
   languageName: node
   linkType: hard
 
@@ -6170,7 +6172,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mkdirp@npm:^0.5.1, mkdirp@npm:^0.5.6":
+"mkdirp@npm:^0.5.6":
   version: 0.5.6
   resolution: "mkdirp@npm:0.5.6"
   dependencies:
