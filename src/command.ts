@@ -76,8 +76,6 @@ const matchImageSnapshot =
 
       const screenshotName = getScreenshotFilename(filename)
 
-      const currentTime = Date.now()
-      const hasTimedOut = currentTime - startTime >= Math.abs(options.timeout)
       cy.task<boolean>(CHECKSNAP, {screenshotName, options}).then((exist) => {
         if (!exist) {
           //base image does not exist yes
@@ -117,7 +115,9 @@ const matchImageSnapshot =
               : `Image was ${
                   diffRatio * 100
                 }% different from saved snapshot with ${diffPixelCount} different pixels.\nSee diff for details: ${diffOutputPath}`
-            if (hasTimedOut) {
+            const currentTime = Date.now()
+            const willTimeOut = currentTime + options.delayBetweenTries- startTime >= Math.abs(options.timeout);
+            if (willTimeOut) {
               Cypress.log({name: COMMAND_NAME, message})
               //An after each hook should check if @matchImageSnapshot is defined, if yes it should fail the tests
               errorMessages[screenshotName] = message
