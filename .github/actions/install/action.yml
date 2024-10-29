@@ -15,6 +15,6 @@ runs:
     - name: yarn install
       uses: ./.github/actions/yarn-nm-install
       with:
-        enable-corepack: false
+        enable-corepack: true
         cache-install-state: true
         cache-node-modules: true

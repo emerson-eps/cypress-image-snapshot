@@ -47,6 +47,12 @@ runs:
       working-directory: ${{ inputs.cwd }}
       run: corepack enable
 
+    - name: Prepare and activate Yarn 3.5.0
+      if: ${{ inputs.enable-corepack }} == 'true'
+      shell: bash
+      working-directory: ${{ inputs.cwd }}
+      run: corepack prepare yarn@3.5.0 --activate
+
     - name: ⚙️ Expose yarn config as "$GITHUB_OUTPUT"
       id: yarn-config
       shell: bash
