@@ -1,6 +1,5 @@
 {
   "name": "@emerson-eps/cypress-image-snapshot",
-  "packageManager": "yarn@3.5.0",
   "version": "1.1.0",
   "files": [
     "*.js",
