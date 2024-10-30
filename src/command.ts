@@ -46,8 +46,9 @@ export const addMatchImageSnapshotCommand = (
     matchImageSnapshot(defaultOptionsOverrides),
   )
 }
-
+const newImageMessage = 'A new reference Image was created for'
 let currentTest: string
+let currentRetry: number
 let errorMessages: {[key: string]: string} = {}
 const matchImageSnapshot =
   (defaultOptionsOverrides: CypressImageSnapshotOptions) =>
@@ -63,9 +64,24 @@ const matchImageSnapshot =
     )
     if (!currentTest) {
       currentTest = Cypress.currentTest.title
-    } else if (currentTest !== Cypress.currentTest.title) {
+      currentRetry = Cypress.currentRetry
+    } else if (
+      currentTest !== Cypress.currentTest.title ||
+      currentRetry !== Cypress.currentRetry
+    ) {
+      // we need to ensure the errors messages about new references being created are kept
+      // because the second attempt will wrongly succeed as the reference image was artificially created by the first attempt
+      if (currentTest === Cypress.currentTest.title) {
+        errorMessages = Object.fromEntries(
+          Object.entries(errorMessages).filter(([, value]) =>
+            value.includes(newImageMessage),
+          ),
+        )
+      } else {
+        errorMessages = {}
+      }
       currentTest = Cypress.currentTest.title
-      errorMessages = {}
+      currentRetry = Cypress.currentRetry
     }
     function recursiveSnapshot(): void {
       const elementToScreenshot = cy.wrap(subject)
@@ -107,7 +123,7 @@ const matchImageSnapshot =
             //An after each hook should check if @matchImageSnapshot is defined, if yes it should fail the tests
             errorMessages[
               screenshotName
-            ] = `A new reference Image was created for ${screenshotName}`
+            ] = `${newImageMessage} ${screenshotName}`
             return
           }
 

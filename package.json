@@ -1,6 +1,5 @@
 {
   "name": "@emerson-eps/cypress-image-snapshot",
-  "packageManager": "yarn@3.5.0",
   "version": "1.1.0",
   "files": [
     "*.js",
@@ -47,8 +46,8 @@
     "@semantic-release/release-notes-generator": "^11.0.7",
     "@types/eslint": "^8.37.0",
     "@types/eslint-config-prettier": "^6.11.0",
-    "@types/node": "^18.17.19",
     "@types/jest": "^29.5.7",
+    "@types/node": "^18.17.19",
     "@types/prettier": "^2.7.3",
     "@typescript-eslint/eslint-plugin": "^5.59.11",
     "@typescript-eslint/parser": "^5.59.11",
