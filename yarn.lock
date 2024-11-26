@@ -289,7 +289,7 @@ __metadata:
     "@types/eslint-config-prettier": ^6.11.0
     "@types/jest": ^29.5.7
     "@types/jest-image-snapshot": ^6.1.0
-    "@types/node": ^18.17.19
+    "@types/node": ^18.19.66
     "@types/prettier": ^2.7.3
     "@typescript-eslint/eslint-plugin": ^5.59.11
     "@typescript-eslint/parser": ^5.59.11
@@ -1407,7 +1407,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:^18.17.19":
+"@types/node@npm:*":
   version: 18.19.60
   resolution: "@types/node@npm:18.19.60"
   dependencies:
@@ -1427,6 +1427,15 @@ __metadata:
   version: 16.18.115
   resolution: "@types/node@npm:16.18.115"
   checksum: a9caf3a72b8fca0a945c04b99502615f297fc9d12779147822cf10b4a3fe77161b631ae239b9522cf9ccda90fcd9d49abe255bd2012a3347f677210610760d6d
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^18.19.66":
+  version: 18.19.66
+  resolution: "@types/node@npm:18.19.66"
+  dependencies:
+    undici-types: ~5.26.4
+  checksum: 77e08fee993d91a94f13c2f2251f0282a9175b8fe13585a0e8514ecfa9ac67a648ba9c76ee03f166babda71a3043a2c49effdae4392024089108fcd0cdb3e263
   languageName: node
   linkType: hard
 
@@ -9087,11 +9096,11 @@ __metadata:
 
 "typescript@patch:typescript@^4.6.4 || ^5.2.2#~builtin<compat/typescript>, typescript@patch:typescript@^5.0.4#~builtin<compat/typescript>":
   version: 5.6.3
-  resolution: "typescript@patch:typescript@npm%3A5.6.3#~builtin<compat/typescript>::version=5.6.3&hash=85af82"
+  resolution: "typescript@patch:typescript@npm%3A5.6.3#~builtin<compat/typescript>::version=5.6.3&hash=8c6c40"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: ade87bce2363ee963eed0e4ca8a312ea02c81873ebd53609bc3f6dc0a57f6e61ad7e3fb8cbb7f7ab8b5081cbee801b023f7c4823ee70b1c447eae050e6c7622b
+  checksum: f6947c263dc67ea8429eefc3921683320f901a07d9ef29a1101a34f5b30108343b5a29aa77a581217a17f2616091ae7bd3043b304cf37f37d5e128e19296c08b
   languageName: node
   linkType: hard
 
