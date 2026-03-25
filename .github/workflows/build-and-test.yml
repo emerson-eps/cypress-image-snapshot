@@ -8,6 +8,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: './.github/actions/install'
+
   lint:
     needs: install
     runs-on: ubuntu-latest
@@ -42,6 +43,11 @@ jobs:
       pull-requests: write # Required for semantic-release to comment on PRs
     steps:
       - uses: actions/checkout@v6
+      - name: install node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          registry-url: "https://registry.npmjs.org"
       - name: yarn install
         uses: ./.github/actions/yarn-nm-install
       - name: Release
